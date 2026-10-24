@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CareFinder — Find the right doctor</title>
+<meta name="description" content="Search, compare and book doctors in a few simple steps.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f8f8;--surface:#fff;--ink:#12303a;--muted:#5b7580;--line:#dbe7e9;--brand:#0f766e;--brand-d:#0b5a54;--soft:#e2f3f1;--warn:#b45309;--ok:#15803d;--err:#b91c1c;--r:16px;--shadow:0 8px 24px rgba(18,48,58,.08)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Plus Jakarta Sans",system-ui,sans-serif;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+h1,h2,h3{margin:0;line-height:1.15}a{color:inherit}button{font-family:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+header.top{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-weight:800;font-size:20px;text-decoration:none;color:var(--brand);display:flex;gap:8px;align-items:center}
+.logo b{width:28px;height:28px;border-radius:8px;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:18px}
+nav a{text-decoration:none;font-weight:600;font-size:14px;padding:8px 12px;border-radius:10px;color:var(--muted)}nav a:hover{background:var(--soft);color:var(--brand)}
+.btn{font-weight:700;font-size:15px;border:0;border-radius:12px;padding:12px 20px;cursor:pointer;background:var(--brand);color:#fff;text-decoration:none;display:inline-block;transition:.15s}
+.btn:hover{background:var(--brand-d);transform:translateY(-1px)}.btn.o{background:none;color:var(--brand);border:2px solid var(--brand)}.btn.o:hover{background:var(--soft)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+:focus-visible{outline:3px solid #38bdf8;outline-offset:2px}
+.hero{background:linear-gradient(180deg,var(--soft),var(--bg));padding:56px 0 40px}
+.hero h1{font-size:clamp(32px,5vw,52px);max-width:16ch;letter-spacing:-.02em}.hero p{color:var(--muted);font-size:18px;max-width:50ch;margin:14px 0 26px}
+.search{display:grid;grid-template-columns:1.4fr 1fr auto;gap:10px;background:var(--surface);padding:12px;border-radius:20px;box-shadow:var(--shadow);max-width:820px}
+input,select,textarea{font:inherit;font-size:16px;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);width:100%}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(15,118,110,.2)}
+.help{margin-top:14px;font-size:15px}.help button{background:none;border:0;color:var(--brand);font-weight:700;cursor:pointer;text-decoration:underline;font-size:15px;padding:0}
+.sec{padding:44px 0}.sec h2{font-size:28px;margin-bottom:6px}.sec .sub{color:var(--muted);margin:0 0 22px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;text-align:left;cursor:pointer;font-weight:700;font-size:16px;color:var(--ink);transition:.15s}
+.tile:hover{border-color:var(--brand);box-shadow:var(--shadow);transform:translateY(-2px)}.tile span{display:block;font-size:26px;margin-bottom:6px}.tile small{display:block;color:var(--muted);font-weight:500;font-size:13px}
+.steps{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}.step{background:var(--surface);border-radius:var(--r);padding:20px;border:1px solid var(--line)}.step b{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--brand);color:#fff;margin-bottom:10px}
+.panel{background:var(--surface);border:2px solid var(--brand);border-radius:20px;padding:22px;margin-top:18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.chip{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:999px;cursor:pointer;font-weight:600;font-size:14px}.chip:hover,.chip.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.rec{background:var(--soft);border-radius:14px;padding:14px;margin-top:10px}
+.layout{display:grid;grid-template-columns:270px 1fr;gap:24px;padding:28px 0 100px;align-items:start}
+.filters{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;position:sticky;top:80px;display:grid;gap:14px}
+.filters label{font-size:13px;font-weight:700;display:block;margin-bottom:4px}
+.fh{display:flex;justify-content:space-between;align-items:center}.fh button{background:none;border:0;color:var(--brand);font-weight:700;cursor:pointer}
+.mf{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;grid-template-columns:76px 1fr auto;gap:16px;margin-bottom:14px;transition:.15s}
+.card:hover{box-shadow:var(--shadow);border-color:#b8d6d3}
+.av{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:24px}
+.card h3{font-size:19px}.card h3 a{text-decoration:none}.card h3 a:hover{color:var(--brand)}
+.meta{color:var(--muted);font-size:14px;margin:2px 0 8px}.tags{display:flex;gap:6px;flex-wrap:wrap}.tag{font-size:12px;font-weight:700;background:var(--soft);color:var(--brand-d);padding:3px 10px;border-radius:999px}.tag.w{background:#fef3c7;color:var(--warn)}.tag.g{background:#dcfce7;color:var(--ok)}
+.side{text-align:right;display:flex;flex-direction:column;gap:8px;align-items:flex-end;justify-content:space-between}.fee{font-weight:800;font-size:18px}
+.cmp{font-size:13px;font-weight:600;display:flex;gap:6px;align-items:center;cursor:pointer}.cmp input{width:18px;height:18px;padding:0;accent-color:#0f766e}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:12px;align-items:center;justify-content:center;z-index:30;flex-wrap:wrap}
+.bar .btn{background:#fff;color:var(--ink)}
+.modal{position:fixed;inset:0;background:rgba(18,48,58,.6);z-index:40;display:grid;place-items:center;padding:16px}
+.mbox{background:var(--surface);border-radius:20px;max-width:900px;width:100%;max-height:88vh;overflow:auto;padding:22px}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:560px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{color:var(--muted);font-weight:600;width:120px}
+.cols{display:grid;grid-template-columns:1fr 340px;gap:24px;padding:28px 0 60px;align-items:start}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;margin-bottom:16px}
+.crumb{padding:18px 0 0;font-size:14px}.crumb a{color:var(--brand);font-weight:600}
+.days{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}.day{flex:0 0 auto;border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 14px;cursor:pointer;font-weight:700;font-size:14px;text-align:center;color:var(--ink)}.day.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.times{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:8px;margin-top:10px}.time{border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:9px;cursor:pointer;font-weight:600;color:var(--ink)}.time:hover:not(:disabled){border-color:var(--brand)}.time.on{background:var(--brand);color:#fff;border-color:var(--brand)}.time:disabled{opacity:.35;text-decoration:line-through;cursor:not-allowed}
+.fld{margin-bottom:14px}.fld label{font-weight:700;font-size:14px;display:block;margin-bottom:4px}.err{color:var(--err);font-size:13px;margin-top:3px;min-height:0}
+.seg{display:flex;gap:8px}.seg button{flex:1}
+.sum{position:sticky;top:80px}.sum dl{margin:0}.sum dt{font-size:12px;color:var(--muted);font-weight:600;margin-top:10px}.sum dd{margin:0;font-weight:700}
+.ok{text-align:center;padding:48px 20px}.ok .tick{width:72px;height:72px;border-radius:50%;background:#dcfce7;color:var(--ok);display:grid;place-items:center;font-size:36px;margin:0 auto 14px}
+footer{background:var(--surface);border-top:1px solid var(--line);padding:26px 0;color:var(--muted);font-size:14px}
+@media (max-width:860px){.search{grid-template-columns:1fr}.layout,.cols{grid-template-columns:1fr}.filters{position:static;display:none}.filters.open{display:grid}.mf{display:inline-block;margin-bottom:12px}.sum{position:static}nav a.h{display:none}.card{grid-template-columns:60px 1fr}.av{width:60px;height:60px;font-size:20px}.side{grid-column:1/-1;flex-direction:row;align-items:center;text-align:left}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><a class="logo" href="#/"><b>+</b>CareFinder</a><nav><a class="h" href="#/">Home</a><a class="h" href="#/doctors">All doctors</a><a href="#/doctors" class="btn" style="color:#fff;padding:9px 16px">Book now</a></nav></div></header>
+<main id="app"></main>
+<div id="cbar"></div><div id="modal"></div>
+<footer><div class="wrap">CareFinder is a design prototype. Doctors and availability are sample data. In an emergency call your local emergency number.</div></footer>
+<script>
+/* ===== Sample data: edit or replace ===== */
+var CUR="DA",SPECS=[["General Practice","🩺","Check-ups, flu, everyday health"],["Cardiology","❤️","Heart and blood pressure"],["Dermatology","🧴","Skin, hair and nails"],["Pediatrics","🧒","Babies, children, teens"],["Neurology","🧠","Headaches, nerves, sleep"],["Orthopedics","🦴","Bones, joints and back"],["Psychiatry","🌿","Anxiety, mood, stress"],["Gastroenterology","🍃","Stomach and digestion"]];
+var COL=["#0f766e","#2563eb","#7c3aed","#c2410c","#be185d","#0369a1","#4d7c0f","#b45309"];
+var D=[
+[1,"Amina Benali","General Practice",12,4.8,214,2500,["Arabic","French","English"],"Family doctor focused on prevention and clear explanations."],
+[2,"Karim Haddad","Cardiology",18,4.9,182,5000,["Arabic","French"],"Treats high blood pressure, palpitations and heart failure."],
+[3,"Sara Mansouri","Dermatology",9,4.7,156,4000,["Arabic","French","English"],"Acne, eczema and skin checks, with gentle, practical plans."],
+[4,"Yacine Larbi","Pediatrics",14,4.9,301,3000,["Arabic","French"],"Calm with children and anxious parents alike."],
+[5,"Lina Cherif","Neurology",11,4.6,97,5500,["French","English"],"Migraine, dizziness and sleep problems."],
+[6,"Omar Belkacem","Orthopedics",20,4.8,140,4500,["Arabic","French"],"Back pain, sports injuries and joint care without rushing to surgery."],
+[7,"Nadia Saidi","Psychiatry",10,4.7,88,5000,["Arabic","French","English"],"Anxiety, low mood and burnout, in a safe and private setting."],
+[8,"Walid Amrani","Gastroenterology",13,4.5,74,4800,["Arabic","French"],"Stomach pain, reflux and digestive tests."],
+[9,"Meriem Touati","General Practice",6,4.4,63,2000,["Arabic","French","English"],"Quick, friendly consultations, same-day slots often available."],
+[10,"Samir Bouzid","Cardiology",8,4.5,59,3800,["Arabic","French","English"],"Heart screenings and healthy-lifestyle coaching."]
+].map(function(a,i){return{id:a[0],name:a[1],spec:a[2],yrs:a[3],rating:a[4],rev:a[5],fee:a[6],langs:a[7],about:a[8],col:COL[i%COL.length],ini:a[1].split(" ").map(function(w){return w[0]}).join("")}});
+var T=["09:00","09:30","10:00","10:30","11:00","14:00","14:30","15:00","16:00","16:30"];
+var SYM=[["Chest pain or racing heart","Cardiology"],["Skin rash or acne","Dermatology"],["Headache or dizziness","Neurology"],["My child is unwell","Pediatrics"],["Joint or back pain","Orthopedics"],["Anxiety or low mood","Psychiatry"],["Stomach pain or reflux","Gastroenterology"],["Fever, cough, tiredness","General Practice"],["I really don’t know","General Practice"]];
+var $=function(i){return document.getElementById(i)},app=$("app");
+function dayInfo(o){var d=new Date();d.setDate(d.getDate()+o);return{o:o,d:d,lbl:o===0?"Today":o===1?"Tomorrow":d.toLocaleDateString("en",{weekday:"short"}),sub:d.toLocaleDateString("en",{day:"numeric",month:"short"}),full:d.toLocaleDateString("en",{weekday:"long",day:"numeric",month:"long"})}}
+function free(doc,o,i){return (doc.id*7+o*3+i*5)%4!==0&&!(o===0&&i<doc.id%4+2)}
+function nextDay(doc){for(var o=0;o<7;o++)for(var i=0;i<T.length;i++)if(free(doc,o,i))return o;return 7}
+function stars(r){return "★ "+r.toFixed(1)}
+var F={q:"",spec:"",avail:"",fee:6000,rating:0,lang:"",sort:"soonest"},cmp=[],B={};
+/* ===== router ===== */
+function route(){var h=location.hash.replace(/^#\/?/,"").split("/"),v=h[0];window.scrollTo(0,0);$("modal").innerHTML="";
+if(v==="doctors")results();else if(v==="doctor"&&find(h[1]))profile(find(h[1]));else if(v==="book"&&find(h[1]))book(find(h[1]));else if(v==="done")done();else home();bar();document.title="CareFinder — Find the right doctor"}
+function find(id){return D.filter(function(d){return d.id==id})[0]}
+window.addEventListener("hashchange",route);
+/* ===== home ===== */
+function specOpts(sel){return '<option value="">All specialties</option>'+SPECS.map(function(s){return '<option'+(s[0]===sel?' selected':'')+'>'+s[0]+'</option>'}).join("")}
+function home(){app.innerHTML='<section class="hero"><div class="wrap"><h1>Find the right doctor, without the stress.</h1><p>Search by name or specialty, compare doctors side by side and book in under a minute.</p>'+
+'<div class="search" role="search"><input id="hq" placeholder="Doctor name or symptom" aria-label="Search"><select id="hs" aria-label="Specialty">'+specOpts("")+'</select><button class="btn" id="hgo">Search</button></div>'+
+'<p class="help">Not sure which specialty you need? <button id="hhelp">Tell us your symptom</button></p><div id="helper"></div></div></section>'+
+'<section class="sec"><div class="wrap"><h2>Browse by specialty</h2><p class="sub">Choose an area to see available doctors.</p><div class="grid">'+SPECS.map(function(s){return '<button class="tile" data-s="'+s[0]+'"><span>'+s[1]+'</span>'+s[0]+'<small>'+s[2]+'</small></button>'}).join("")+'</div></div></section>'+
+'<section class="sec"><div class="wrap"><h2>How it works</h2><p class="sub">Three steps from “many doctors” to “the right one”.</p><div class="steps"><div class="step"><b>1</b><h3>Search or describe</h3><p>Pick a specialty, or tell us your symptom and we suggest one.</p></div><div class="step"><b>2</b><h3>Filter and compare</h3><p>Narrow by availability, fee, rating and language. Compare up to 3 doctors.</p></div><div class="step"><b>3</b><h3>Book instantly</h3><p>Choose a time, add your details and get a confirmation.</p></div></div></div></section>'+
+'<section class="sec"><div class="wrap"><h2>Top-rated doctors</h2><p class="sub">Highly rated by patients.</p><div id="top"></div><a class="btn o" href="#/doctors">See all doctors</a></div></section>';
+$("top").innerHTML=D.slice().sort(function(a,b){return b.rating-a.rating}).slice(0,3).map(card).join("");
+$("hgo").onclick=function(){F.q=$("hq").value;F.spec=$("hs").value;location.hash="#/doctors"};
+$("hq").onkeydown=function(e){if(e.key==="Enter")$("hgo").click()};
+$("hhelp").onclick=helper;
+app.onclick=clicks}
+function helper(){$("helper").innerHTML='<div class="panel"><h3>What are you experiencing?</h3><div class="chips">'+SYM.map(function(s,i){return '<button class="chip" data-sym="'+i+'">'+s[0]+'</button>'}).join("")+'</div><div id="rec"></div></div>';$("helper").scrollIntoView({block:"center"})}
+/* ===== results ===== */
+function filtered(){var q=F.q.toLowerCase();var r=D.filter(function(d){return(!q||(d.name+" "+d.spec).toLowerCase().indexOf(q)>-1)&&(!F.spec||d.spec===F.spec)&&d.fee<=F.fee&&d.rating>=F.rating&&(!F.lang||d.langs.indexOf(F.lang)>-1)&&(!F.avail||nextDay(d)<=+F.avail)});
+r.sort(function(a,b){return F.sort==="rating"?b.rating-a.rating:F.sort==="fee"?a.fee-b.fee:nextDay(a)-nextDay(b)||b.rating-a.rating});return r}
+function card(d){var n=nextDay(d),nd=n<7?dayInfo(n).lbl:"No slots";return '<article class="card"><div class="av" style="background:'+d.col+'" aria-hidden="true">'+d.ini+'</div><div><h3><a href="#/doctor/'+d.id+'">Dr. '+d.name+'</a></h3><div class="meta">'+d.spec+' · '+d.yrs+' yrs · '+d.langs.join(", ")+'</div><div class="tags"><span class="tag">'+stars(d.rating)+' ('+d.rev+')</span><span class="tag '+(n===0?'g':n<7?'':'w')+'">Next: '+nd+'</span></div></div><div class="side"><div class="fee">'+d.fee+' '+CUR+'</div><div><a class="btn" href="#/book/'+d.id+'" style="padding:9px 16px">Book</a></div><label class="cmp"><input type="checkbox" data-cmp="'+d.id+'"'+(cmp.indexOf(d.id)>-1?' checked':'')+'> Compare</label></div></article>'}
+function results(){app.innerHTML='<div class="wrap"><div class="crumb"><a href="#/">Home</a> / Doctors</div><div class="layout"><aside><button class="btn o mf" id="mf">Filters</button><form class="filters" id="fl" onsubmit="return false"><div class="fh"><h3>Filters</h3><button type="button" id="rs">Reset</button></div>'+
+'<div><label for="f-q">Name or keyword</label><input id="f-q" data-f="q" value="'+F.q+'"></div><div><label for="f-s">Specialty</label><select id="f-s" data-f="spec">'+specOpts(F.spec)+'</select></div>'+
+'<div><label for="f-a">Available</label><select id="f-a" data-f="avail"><option value="">Any time</option><option value="0">Today</option><option value="1">By tomorrow</option><option value="3">Within 3 days</option></select></div>'+
+'<div><label for="f-f">Max fee: <span id="fv"></span></label><input id="f-f" type="range" min="2000" max="6000" step="500" data-f="fee" style="padding:0"></div>'+
+'<div><label for="f-r">Minimum rating</label><select id="f-r" data-f="rating"><option value="0">Any</option><option value="4">4.0+</option><option value="4.5">4.5+</option><option value="4.8">4.8+</option></select></div>'+
+'<div><label for="f-l">Language</label><select id="f-l" data-f="lang"><option value="">Any</option><option>Arabic</option><option>French</option><option>English</option></select></div></form></aside>'+
+'<section><div class="fh" style="margin-bottom:14px"><h2 id="cnt" style="font-size:22px"></h2><select id="so" data-f="sort" style="width:auto" aria-label="Sort by"><option value="soonest">Soonest available</option><option value="rating">Highest rated</option><option value="fee">Lowest fee</option></select></div><div id="list"></div></section></div></div>';
+syncF();list();
+$("mf").onclick=function(){$("fl").classList.toggle("open")};
+$("rs").onclick=function(){F={q:"",spec:"",avail:"",fee:6000,rating:0,lang:"",sort:"soonest"};syncF();list()};
+app.oninput=app.onchange=function(e){var k=e.target.dataset.f;if(!k)return;F[k]=k==="fee"||k==="rating"?+e.target.value:e.target.value;$("fv").textContent=F.fee+" "+CUR;list()};
+app.onclick=clicks}
+function syncF(){["q","spec","avail","fee","rating","lang"].forEach(function(k){var m={q:"f-q",spec:"f-s",avail:"f-a",fee:"f-f",rating:"f-r",lang:"f-l"};$(m[k]).value=F[k]});$("so").value=F.sort;$("fv").textContent=F.fee+" "+CUR}
+function list(){var r=filtered();$("cnt").textContent=r.length+" doctor"+(r.length===1?"":"s");$("list").innerHTML=r.length?r.map(card).join(""):'<div class="box"><h3>No doctors match these filters</h3><p>Try a larger fee limit, a longer time window or clear the filters.</p><button class="btn" id="rs2">Clear filters</button></div>';if($("rs2"))$("rs2").onclick=function(){$("rs").click()}}
+/* ===== compare ===== */
+function bar(){var el=$("cbar");el.innerHTML=cmp.length?'<div class="bar"><span>'+cmp.length+' selected (max 3)</span><button class="btn" data-open="cmp"'+(cmp.length<2?' disabled':'')+'>Compare</button><button class="btn" data-clear="1" style="background:none;color:#fff;border:1px solid #fff">Clear</button></div>':""}
+function cmpModal(){var L=cmp.map(find),rows=[["Specialty",function(d){return d.spec}],["Rating",function(d){return stars(d.rating)+" ("+d.rev+")"}],["Experience",function(d){return d.yrs+" years"}],["Fee",function(d){return d.fee+" "+CUR}],["Languages",function(d){return d.langs.join(", ")}],["Next slot",function(d){var n=nextDay(d);return n<7?dayInfo(n).full:"None this week"}],["",function(d){return '<a class="btn" style="padding:8px 14px" href="#/book/'+d.id+'">Book</a>'}]];
+$("modal").innerHTML='<div class="modal" data-close="1"><div class="mbox" role="dialog" aria-label="Compare doctors"><div class="fh"><h2 style="font-size:22px">Compare doctors</h2><button class="btn o" data-close="1" style="padding:6px 14px">Close</button></div><div style="overflow-x:auto;margin-top:12px"><table><tr><th></th>'+L.map(function(d){return '<td><b>Dr. '+d.name+'</b></td>'}).join("")+'</tr>'+rows.map(function(r){return '<tr><th>'+r[0]+'</th>'+L.map(function(d){return '<td>'+r[1](d)+'</td>'}).join("")+'</tr>'}).join("")+'</table></div></div></div>'}
+/* ===== profile ===== */
+function profile(d){var n=nextDay(d);app.innerHTML='<div class="wrap"><div class="crumb"><a href="#/">Home</a> / <a href="#/doctors">Doctors</a> / Dr. '+d.name+'</div><div class="cols"><div><div class="box" style="display:flex;gap:18px;align-items:center;flex-wrap:wrap"><div class="av" style="background:'+d.col+';width:96px;height:96px;font-size:30px">'+d.ini+'</div><div><h1 style="font-size:30px">Dr. '+d.name+'</h1><div class="meta" style="font-size:16px">'+d.spec+' · '+d.yrs+' years of experience</div><div class="tags"><span class="tag">'+stars(d.rating)+' ('+d.rev+' reviews)</span><span class="tag">Speaks '+d.langs.join(", ")+'</span></div></div></div>'+
+'<div class="box"><h3>About</h3><p>'+d.about+' Appointments are 30 minutes, and you can bring previous results or prescriptions.</p></div>'+
+'<div class="box"><h3>Good to know</h3><p>✔ Fee: '+d.fee+' '+CUR+' per visit<br>✔ Clinic: Central Clinic, 2nd floor, wheelchair accessible<br>✔ Free rescheduling up to 24 hours before</p></div>'+
+'<div class="box"><h3>What patients say</h3><p>“Listened carefully and explained everything simply.”<br>“Short wait, very kind.”</p></div></div>'+
+'<aside><div class="box sum"><h3>Book an appointment</h3><p class="meta">'+(n<7?'Next available: <b>'+dayInfo(n).full+'</b>':'No slots this week')+'</p><div class="fee" style="margin-bottom:12px">'+d.fee+' '+CUR+'</div><a class="btn" href="#/book/'+d.id+'" style="width:100%;text-align:center">Choose a time</a><p style="margin:12px 0 0;font-size:13px;color:var(--muted)">No payment needed now.</p></div></aside></div></div>'}
+/* ===== booking ===== */
+function book(d){if(B.id!==d.id)B={id:d.id,day:nextDay(d)<7?nextDay(d):0,time:"",type:"In person",name:"",phone:"",email:"",reason:""};
+var days="";for(var o=0;o<7;o++){var di=dayInfo(o);days+='<button class="day'+(B.day===o?' on':'')+'" data-day="'+o+'">'+di.lbl+'<br><small>'+di.sub+'</small></button>'}
+app.innerHTML='<div class="wrap"><div class="crumb"><a href="#/">Home</a> / <a href="#/doctors">Doctors</a> / <a href="#/doctor/'+d.id+'">Dr. '+d.name+'</a> / Book</div><div class="cols"><div><div class="box"><h2 style="font-size:22px;margin-bottom:12px">1. Choose date and time</h2><div class="days">'+days+'</div><div class="times" id="times"></div><div class="err" id="e-time"></div></div>'+
+'<div class="box"><h2 style="font-size:22px;margin-bottom:12px">2. Your details</h2><div class="fld"><label>Visit type</label><div class="seg"><button class="chip'+(B.type==="In person"?' on':'')+'" data-type="In person">In person</button><button class="chip'+(B.type==="Video"?' on':'')+'" data-type="Video">Video call</button></div></div>'+
+'<div class="fld"><label for="b-n">Full name</label><input id="b-n" value="'+B.name+'" autocomplete="name"><div class="err" id="e-n"></div></div><div class="fld"><label for="b-p">Phone</label><input id="b-p" type="tel" value="'+B.phone+'" autocomplete="tel"><div class="err" id="e-p"></div></div><div class="fld"><label for="b-e">Email (optional)</label><input id="b-e" type="email" value="'+B.email+'"></div><div class="fld"><label for="b-r">Reason for visit (optional)</label><textarea id="b-r" rows="3">'+B.reason+'</textarea></div></div></div>'+
+'<aside><div class="box sum"><h3>Summary</h3><dl><dt>Doctor</dt><dd>Dr. '+d.name+'</dd><dt>Specialty</dt><dd>'+d.spec+'</dd><dt>When</dt><dd id="s-when"></dd><dt>Fee</dt><dd>'+d.fee+' '+CUR+'</dd></dl><button class="btn" id="conf" style="width:100%;margin-top:16px">Confirm booking</button></div></aside></div></div>';
+times(d);
+["n","p","e","r"].forEach(function(k){$("b-"+k).oninput=function(){B[{n:"name",p:"phone",e:"email",r:"reason"}[k]]=this.value}});
+$("conf").onclick=function(){var ok=true;$("e-n").textContent=$("e-p").textContent=$("e-time").textContent="";
+if(!B.time){$("e-time").textContent="Please choose a time.";ok=false}
+if(B.name.trim().length<3){$("e-n").textContent="Please enter your full name.";ok=false}
+if(!/^[+\d][\d\s-]{7,}$/.test(B.phone.trim())){$("e-p").textContent="Enter a valid phone number.";ok=false}
+if(ok){B.code="CF-"+Math.floor(1000+Math.random()*9000);B.done=1;location.hash="#/done"}}}
+function times(d){var h="";T.forEach(function(t,i){var f=free(d,B.day,i);h+='<button class="time'+(B.time===t&&f?' on':'')+'" data-time="'+t+'"'+(f?'':' disabled')+'>'+t+'</button>'});$("times").innerHTML=h;$("s-when").textContent=dayInfo(B.day).full+(B.time?" at "+B.time:" (pick a time)")}
+function done(){var d=find(B.id);if(!B.done||!d){location.hash="#/";return}app.innerHTML='<div class="wrap"><div class="box ok" style="margin-top:40px"><div class="tick">✓</div><h1 style="font-size:28px">Appointment confirmed</h1><p>Dr. '+d.name+' · '+dayInfo(B.day).full+' at '+B.time+'<br>'+B.type+' · Reference <b>'+B.code+'</b></p><p style="color:var(--muted)">We’ll text '+B.phone+' with a reminder the day before.</p><a class="btn" href="#/">Back to home</a></div></div>'}
+/* ===== shared clicks ===== */
+function clicks(e){var t=e.target,s=t.closest("[data-s]"),y=t.closest("[data-sym]"),d=t.closest("[data-day]"),tm=t.closest("[data-time]"),ty=t.closest("[data-type]");
+if(s){F.spec=s.dataset.s;F.q="";location.hash="#/doctors"}
+if(y){var m=SYM[y.dataset.sym];document.querySelectorAll("[data-sym]").forEach(function(c){c.classList.toggle("on",c===y)});$("rec").innerHTML='<div class="rec"><b>We suggest: '+m[1]+'</b><p style="margin:4px 0 10px">'+(m[0]==="I really don’t know"?"A General Practitioner is the best first step. They will examine you and refer you if needed.":"This specialist can usually help with “"+m[0].toLowerCase()+"”.")+' This is guidance, not a diagnosis.</p><button class="btn" data-s="'+m[1]+'">See '+m[1]+' doctors</button></div>'}
+if(d){B.day=+d.dataset.day;B.time="";document.querySelectorAll(".day").forEach(function(x){x.classList.toggle("on",x===d)});times(find(B.id))}
+if(tm&&!tm.disabled){B.time=tm.dataset.time;times(find(B.id))}
+if(ty){B.type=ty.dataset.type;document.querySelectorAll("[data-type]").forEach(function(x){x.classList.toggle("on",x===ty)})}}
+document.addEventListener("change",function(e){var id=e.target.dataset&&e.target.dataset.cmp;if(!id)return;id=+id;var i=cmp.indexOf(id);if(e.target.checked){if(cmp.length>=3){e.target.checked=false;alert("You can compare up to 3 doctors.");return}cmp.push(id)}else if(i>-1)cmp.splice(i,1);bar()});
+document.addEventListener("click",function(e){var t=e.target;if(t.closest("[data-open]"))cmpModal();else if(t.closest("[data-clear]")){cmp=[];bar();document.querySelectorAll("[data-cmp]").forEach(function(c){c.checked=false})}else if(t.dataset&&t.dataset.close||t.closest("button[data-close]"))$("modal").innerHTML=""});
+route();
+</script>
+</body>
+</html>
